@@ -1,37 +1,22 @@
 import React, {Component} from 'react';
-import {Contact} from './Contact';
+import {Contact} from '../components/Contact';
 import {FlatButton, Table, TableBody, TableHeader, TableHeaderColumn, TableRow} from 'material-ui';
 import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
+import {deleteContact, fetchAllContacts} from '../actions/contacts';
 
-export default class ContactList extends Component {
-  state = {
-    contacts: []
-  };
+class ContactList extends Component {
 
   componentDidMount() {
-    this.fetchAll();
+    this.props.fetchAllContacts();
   }
 
-  fetchAll = () => {
-    fetch('http://localhost:8090/api/contacts')
-      .then(resp => resp.json())
-      .then(data => this.setState({contacts: data._embedded.contacts}));
-  };
-
   handleDelete = id => {
-    fetch(`http://localhost:8090/api/contacts/${id}`, {
-      method: 'delete'
-    })
-      .then(resp => {
-        if (resp.ok) {
-          //this.setState({contacts: this.state.contacts.filter(contact => contact.id !== id)});
-          this.fetchAll();
-        }
-      });
+    this.props.deleteContact(id)
   };
 
   render() {
-    let contacts = this.state.contacts.map(contact =>
+    let contacts = this.props.contacts.map(contact =>
       <Contact contact={contact} key={contact.id} onDelete={this.handleDelete}/>);
     return (
       <div>
@@ -53,3 +38,8 @@ export default class ContactList extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  contacts: state.contactStore.contacts
+});
+export default connect(mapStateToProps, {fetchAllContacts, deleteContact})(ContactList)

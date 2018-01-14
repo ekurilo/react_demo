@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import ContactList from './ContactList';
+import ContactList from './containers/ContactList';
 import {Route} from 'react-router-dom';
-import AddContact from './AddContact';
-import EditContact from './EditContact';
+import AddContact from './containers/AddContact';
+import EditContact from './containers/EditContact';
 
 class App extends Component {
   render() {
